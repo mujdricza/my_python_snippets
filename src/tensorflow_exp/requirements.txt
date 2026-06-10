@@ -1,0 +1,8 @@
+tensorflow
+jupyter
+
+#####
+# NOTE: if you only use CPU, you can use the specific tensorflow:
+# $ pip uninstall tensorflow
+# $ pip install tensorflow-cpu
+# Then, also the warnings on CUDA won't occur.

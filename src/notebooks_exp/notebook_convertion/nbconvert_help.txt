@@ -1,0 +1,2523 @@
+This application is used to convert notebook files (*.ipynb)
+        to various other formats.
+
+        WARNING: THE COMMANDLINE INTERFACE MAY CHANGE IN FUTURE RELEASES.
+
+Options
+=======
+The options below are convenience aliases to configurable class-options,
+as listed in the "Equivalent to" description-line of the aliases.
+To see all configurable class-options for some <cmd>, use:
+    <cmd> --help-all
+
+--debug
+    set log level to logging.DEBUG (maximize logging output)
+    Equivalent to: [--Application.log_level=10]
+--show-config
+    Show the application's configuration (human-readable format)
+    Equivalent to: [--Application.show_config=True]
+--show-config-json
+    Show the application's configuration (json format)
+    Equivalent to: [--Application.show_config_json=True]
+--generate-config
+    generate default config file
+    Equivalent to: [--JupyterApp.generate_config=True]
+-y
+    Answer yes to any questions instead of prompting.
+    Equivalent to: [--JupyterApp.answer_yes=True]
+--execute
+    Execute the notebook prior to export.
+    Equivalent to: [--ExecutePreprocessor.enabled=True]
+--allow-errors
+    Continue notebook execution even if one of the cells throws an error and include the error message in the cell output (the default behaviour is to abort conversion). This flag is only relevant if '--execute' was specified, too.
+    Equivalent to: [--ExecutePreprocessor.allow_errors=True]
+--stdin
+    read a single notebook file from stdin. Write the resulting notebook with default basename 'notebook.*'
+    Equivalent to: [--NbConvertApp.from_stdin=True]
+--stdout
+    Write notebook output to stdout instead of files.
+    Equivalent to: [--NbConvertApp.writer_class=StdoutWriter]
+--inplace
+    Run nbconvert in place, overwriting the existing notebook (only
+            relevant when converting to notebook format)
+    Equivalent to: [--NbConvertApp.use_output_suffix=False --NbConvertApp.export_format=notebook --FilesWriter.build_directory=]
+--clear-output
+    Clear output of current file and save in place,
+            overwriting the existing notebook.
+    Equivalent to: [--NbConvertApp.use_output_suffix=False --NbConvertApp.export_format=notebook --FilesWriter.build_directory= --ClearOutputPreprocessor.enabled=True]
+--coalesce-streams
+    Coalesce consecutive stdout and stderr outputs into one stream (within each cell).
+    Equivalent to: [--NbConvertApp.use_output_suffix=False --NbConvertApp.export_format=notebook --FilesWriter.build_directory= --CoalesceStreamsPreprocessor.enabled=True]
+--no-prompt
+    Exclude input and output prompts from converted document.
+    Equivalent to: [--TemplateExporter.exclude_input_prompt=True --TemplateExporter.exclude_output_prompt=True]
+--no-input
+    Exclude input cells and output prompts from converted document.
+            This mode is ideal for generating code-free reports.
+    Equivalent to: [--TemplateExporter.exclude_output_prompt=True --TemplateExporter.exclude_input=True --TemplateExporter.exclude_input_prompt=True]
+--allow-chromium-download
+    Whether to allow downloading chromium if no suitable version is found on the system.
+    Equivalent to: [--WebPDFExporter.allow_chromium_download=True]
+--disable-chromium-sandbox
+    Disable chromium security sandbox when converting to PDF..
+    Equivalent to: [--WebPDFExporter.disable_sandbox=True]
+--show-input
+    Shows code input. This flag is only useful for dejavu users.
+    Equivalent to: [--TemplateExporter.exclude_input=False]
+--embed-images
+    Embed the images as base64 dataurls in the output. This flag is only useful for the HTML/WebPDF/Slides exports.
+    Equivalent to: [--HTMLExporter.embed_images=True]
+--sanitize-html
+    Whether the HTML in Markdown cells and cell outputs should be sanitized..
+    Equivalent to: [--HTMLExporter.sanitize_html=True]
+--log-level=<Enum>
+    Set the log level by value or name.
+    Choices: any of [0, 10, 20, 30, 40, 50, 'DEBUG', 'INFO', 'WARN', 'ERROR', 'CRITICAL']
+    Default: 30
+    Equivalent to: [--Application.log_level]
+--config=<Unicode>
+    Full path of a config file.
+    Default: ''
+    Equivalent to: [--JupyterApp.config_file]
+--to=<Unicode>
+    The export format to be used, either one of the built-in formats
+            ['asciidoc', 'custom', 'html', 'latex', 'markdown', 'notebook', 'pdf', 'python', 'qtpdf', 'qtpng', 'rst', 'script', 'slides', 'webpdf']
+            or a dotted object name that represents the import path for an
+            ``Exporter`` class
+    Default: ''
+    Equivalent to: [--NbConvertApp.export_format]
+--template=<Unicode>
+    Name of the template to use
+    Default: ''
+    Equivalent to: [--TemplateExporter.template_name]
+--template-file=<Unicode>
+    Name of the template file to use
+    Default: None
+    Equivalent to: [--TemplateExporter.template_file]
+--theme=<Unicode>
+    Template specific theme(e.g. the name of a JupyterLab CSS theme distributed
+    as prebuilt extension for the lab template)
+    Default: 'light'
+    Equivalent to: [--HTMLExporter.theme]
+--sanitize_html=<Bool>
+    Whether the HTML in Markdown cells and cell outputs should be sanitized.This
+    should be set to True by nbviewer or similar tools.
+    Default: False
+    Equivalent to: [--HTMLExporter.sanitize_html]
+--writer=<DottedObjectName>
+    Writer class used to write the
+                                        results of the conversion
+    Default: 'FilesWriter'
+    Equivalent to: [--NbConvertApp.writer_class]
+--post=<DottedOrNone>
+    PostProcessor class used to write the
+                                        results of the conversion
+    Default: ''
+    Equivalent to: [--NbConvertApp.postprocessor_class]
+--output=<Unicode>
+    Overwrite base name use for output files.
+                Supports pattern replacements '{notebook_name}'.
+    Default: '{notebook_name}'
+    Equivalent to: [--NbConvertApp.output_base]
+--output-dir=<Unicode>
+    Directory to write output(s) to. Defaults
+                                  to output to the directory of each notebook. To recover
+                                  previous default behaviour (outputting to the current
+                                  working directory) use . as the flag value.
+    Default: ''
+    Equivalent to: [--FilesWriter.build_directory]
+--reveal-prefix=<Unicode>
+    The URL prefix for reveal.js (version 3.x).
+            This defaults to the reveal CDN, but can be any url pointing to a copy
+            of reveal.js.
+            For speaker notes to work, this must be a relative path to a local
+            copy of reveal.js: e.g., "reveal.js".
+            If a relative path is given, it must be a subdirectory of the
+            current directory (from which the server is run).
+            See the usage documentation
+            (https://nbconvert.readthedocs.io/en/latest/usage.html#reveal-js-html-slideshow)
+            for more details.
+    Default: ''
+    Equivalent to: [--SlidesExporter.reveal_url_prefix]
+--nbformat=<Enum>
+    The nbformat version to write.
+            Use this to downgrade notebooks.
+    Choices: any of [1, 2, 3, 4]
+    Default: 4
+    Equivalent to: [--NotebookExporter.nbformat_version]
+
+Class options
+=============
+The command-line option below sets the respective configurable class-parameter:
+    --Class.parameter=value
+This line is evaluated in Python, so simple expressions are allowed.
+For instance, to set `C.a=[0,1,2]`, you may type this:
+    --C.a='range(3)'
+
+Application(SingletonConfigurable) options
+------------------------------------------
+--Application.log_datefmt=<Unicode>
+    The date format used by logging formatters for %(asctime)s
+    Default: '%Y-%m-%d %H:%M:%S'
+--Application.log_format=<Unicode>
+    The Logging format template
+    Default: '[%(name)s]%(highlevel)s %(message)s'
+--Application.log_level=<Enum>
+    Set the log level by value or name.
+    Choices: any of [0, 10, 20, 30, 40, 50, 'DEBUG', 'INFO', 'WARN', 'ERROR', 'CRITICAL']
+    Default: 30
+--Application.logging_config=<key-1>=<value-1>...
+    Configure additional log handlers.
+    The default stderr logs handler is configured by the log_level, log_datefmt
+    and log_format settings.
+    This configuration can be used to configure additional handlers (e.g. to
+    output the log to a file) or for finer control over the default handlers.
+    If provided this should be a logging configuration dictionary, for more
+    information see:
+    https://docs.python.org/3/library/logging.config.html#logging-config-
+    dictschema
+    This dictionary is merged with the base logging configuration which defines
+    the following:
+    * A logging formatter intended for interactive use called
+      ``console``.
+    * A logging handler that writes to stderr called
+      ``console`` which uses the formatter ``console``.
+    * A logger with the name of this application set to ``DEBUG``
+      level.
+    This example adds a new handler that writes to a file:
+    .. code-block:: python
+       c.Application.logging_config = {
+           "handlers": {
+               "file": {
+                   "class": "logging.FileHandler",
+                   "level": "DEBUG",
+                   "filename": "<path/to/file>",
+               }
+           },
+           "loggers": {
+               "<application-name>": {
+                   "level": "DEBUG",
+                   # NOTE: if you don't list the default "console"
+                   # handler here then it will be disabled
+                   "handlers": ["console", "file"],
+               },
+           },
+       }
+    Default: {}
+--Application.show_config=<Bool>
+    Instead of starting the Application, dump configuration to stdout
+    Default: False
+--Application.show_config_json=<Bool>
+    Instead of starting the Application, dump configuration to stdout (as JSON)
+    Default: False
+
+JupyterApp(Application) options
+-------------------------------
+--JupyterApp.answer_yes=<Bool>
+    Answer yes to any prompts.
+    Default: False
+--JupyterApp.config_file=<Unicode>
+    Full path of a config file.
+    Default: ''
+--JupyterApp.config_file_name=<Unicode>
+    Specify a config file to load.
+    Default: ''
+--JupyterApp.generate_config=<Bool>
+    Generate default config file.
+    Default: False
+--JupyterApp.log_datefmt=<Unicode>
+    The date format used by logging formatters for %(asctime)s
+    Default: '%Y-%m-%d %H:%M:%S'
+--JupyterApp.log_format=<Unicode>
+    The Logging format template
+    Default: '[%(name)s]%(highlevel)s %(message)s'
+--JupyterApp.log_level=<Enum>
+    Set the log level by value or name.
+    Choices: any of [0, 10, 20, 30, 40, 50, 'DEBUG', 'INFO', 'WARN', 'ERROR', 'CRITICAL']
+    Default: 30
+--JupyterApp.logging_config=<key-1>=<value-1>...
+    Configure additional log handlers.
+    The default stderr logs handler is configured by the log_level, log_datefmt
+    and log_format settings.
+    This configuration can be used to configure additional handlers (e.g. to
+    output the log to a file) or for finer control over the default handlers.
+    If provided this should be a logging configuration dictionary, for more
+    information see:
+    https://docs.python.org/3/library/logging.config.html#logging-config-
+    dictschema
+    This dictionary is merged with the base logging configuration which defines
+    the following:
+    * A logging formatter intended for interactive use called
+      ``console``.
+    * A logging handler that writes to stderr called
+      ``console`` which uses the formatter ``console``.
+    * A logger with the name of this application set to ``DEBUG``
+      level.
+    This example adds a new handler that writes to a file:
+    .. code-block:: python
+       c.Application.logging_config = {
+           "handlers": {
+               "file": {
+                   "class": "logging.FileHandler",
+                   "level": "DEBUG",
+                   "filename": "<path/to/file>",
+               }
+           },
+           "loggers": {
+               "<application-name>": {
+                   "level": "DEBUG",
+                   # NOTE: if you don't list the default "console"
+                   # handler here then it will be disabled
+                   "handlers": ["console", "file"],
+               },
+           },
+       }
+    Default: {}
+--JupyterApp.show_config=<Bool>
+    Instead of starting the Application, dump configuration to stdout
+    Default: False
+--JupyterApp.show_config_json=<Bool>
+    Instead of starting the Application, dump configuration to stdout (as JSON)
+    Default: False
+
+NbConvertApp(JupyterApp) options
+--------------------------------
+--NbConvertApp.answer_yes=<Bool>
+    Answer yes to any prompts.
+    Default: False
+--NbConvertApp.config_file=<Unicode>
+    Full path of a config file.
+    Default: ''
+--NbConvertApp.config_file_name=<Unicode>
+    Specify a config file to load.
+    Default: ''
+--NbConvertApp.export_format=<Unicode>
+    The export format to be used, either one of the built-in formats
+            ['asciidoc', 'custom', 'html', 'latex', 'markdown', 'notebook', 'pdf', 'python', 'qtpdf', 'qtpng', 'rst', 'script', 'slides', 'webpdf']
+            or a dotted object name that represents the import path for an
+            ``Exporter`` class
+    Default: ''
+--NbConvertApp.from_stdin=<Bool>
+    read a single notebook from stdin.
+    Default: False
+--NbConvertApp.generate_config=<Bool>
+    Generate default config file.
+    Default: False
+--NbConvertApp.log_datefmt=<Unicode>
+    The date format used by logging formatters for %(asctime)s
+    Default: '%Y-%m-%d %H:%M:%S'
+--NbConvertApp.log_format=<Unicode>
+    The Logging format template
+    Default: '[%(name)s]%(highlevel)s %(message)s'
+--NbConvertApp.log_level=<Enum>
+    Set the log level by value or name.
+    Choices: any of [0, 10, 20, 30, 40, 50, 'DEBUG', 'INFO', 'WARN', 'ERROR', 'CRITICAL']
+    Default: 30
+--NbConvertApp.logging_config=<key-1>=<value-1>...
+    Configure additional log handlers.
+    The default stderr logs handler is configured by the log_level, log_datefmt
+    and log_format settings.
+    This configuration can be used to configure additional handlers (e.g. to
+    output the log to a file) or for finer control over the default handlers.
+    If provided this should be a logging configuration dictionary, for more
+    information see:
+    https://docs.python.org/3/library/logging.config.html#logging-config-
+    dictschema
+    This dictionary is merged with the base logging configuration which defines
+    the following:
+    * A logging formatter intended for interactive use called
+      ``console``.
+    * A logging handler that writes to stderr called
+      ``console`` which uses the formatter ``console``.
+    * A logger with the name of this application set to ``DEBUG``
+      level.
+    This example adds a new handler that writes to a file:
+    .. code-block:: python
+       c.Application.logging_config = {
+           "handlers": {
+               "file": {
+                   "class": "logging.FileHandler",
+                   "level": "DEBUG",
+                   "filename": "<path/to/file>",
+               }
+           },
+           "loggers": {
+               "<application-name>": {
+                   "level": "DEBUG",
+                   # NOTE: if you don't list the default "console"
+                   # handler here then it will be disabled
+                   "handlers": ["console", "file"],
+               },
+           },
+       }
+    Default: {}
+--NbConvertApp.notebooks=<list-item-1>...
+    List of notebooks to convert.
+                         Wildcards are supported.
+                         Filenames passed positionally will be added to the list.
+    Default: []
+--NbConvertApp.output_base=<Unicode>
+    Overwrite base name use for output files.
+                Supports pattern replacements '{notebook_name}'.
+    Default: '{notebook_name}'
+--NbConvertApp.output_files_dir=<Unicode>
+    Directory to copy extra files (figures) to.
+                   '{notebook_name}' in the string will be converted to notebook
+                   basename.
+    Default: '{notebook_name}_files'
+--NbConvertApp.postprocessor_class=<DottedOrNone>
+    PostProcessor class used to write the
+                                        results of the conversion
+    Default: ''
+--NbConvertApp.recursive_glob=<Bool>
+    set the 'recursive' option for glob for searching wildcards.
+    Default: False
+--NbConvertApp.show_config=<Bool>
+    Instead of starting the Application, dump configuration to stdout
+    Default: False
+--NbConvertApp.show_config_json=<Bool>
+    Instead of starting the Application, dump configuration to stdout (as JSON)
+    Default: False
+--NbConvertApp.use_output_suffix=<Bool>
+    Whether to apply a suffix prior to the extension (only relevant
+                when converting to notebook format). The suffix is determined by
+                the exporter, and is usually '.nbconvert'.
+    Default: True
+--NbConvertApp.writer_class=<DottedObjectName>
+    Writer class used to write the
+                                        results of the conversion
+    Default: 'FilesWriter'
+
+NbConvertBase(LoggingConfigurable) options
+------------------------------------------
+--NbConvertBase.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--NbConvertBase.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+
+Exporter(LoggingConfigurable) options
+-------------------------------------
+--Exporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--Exporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--Exporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--Exporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--Exporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+
+TemplateExporter(Exporter) options
+----------------------------------
+--TemplateExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--TemplateExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--TemplateExporter.exclude_code_cell=<Bool>
+    This allows you to exclude code cells from all templates if set to True.
+    Default: False
+--TemplateExporter.exclude_input=<Bool>
+    This allows you to exclude code cell inputs from all templates if set to
+    True.
+    Default: False
+--TemplateExporter.exclude_input_prompt=<Bool>
+    This allows you to exclude input prompts from all templates if set to True.
+    Default: False
+--TemplateExporter.exclude_markdown=<Bool>
+    This allows you to exclude markdown cells from all templates if set to True.
+    Default: False
+--TemplateExporter.exclude_output=<Bool>
+    This allows you to exclude code cell outputs from all templates if set to
+    True.
+    Default: False
+--TemplateExporter.exclude_output_prompt=<Bool>
+    This allows you to exclude output prompts from all templates if set to True.
+    Default: False
+--TemplateExporter.exclude_output_stdin=<Bool>
+    This allows you to exclude output of stdin stream from lab template if set
+    to True.
+    Default: True
+--TemplateExporter.exclude_raw=<Bool>
+    This allows you to exclude raw cells from all templates if set to True.
+    Default: False
+--TemplateExporter.exclude_unknown=<Bool>
+    This allows you to exclude unknown cells from all templates if set to True.
+    Default: False
+--TemplateExporter.extra_template_basedirs=<list-item-1>...
+    Default: []
+--TemplateExporter.extra_template_paths=<list-item-1>...
+    Default: []
+--TemplateExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--TemplateExporter.filters=<key-1>=<value-1>...
+    Dictionary of filters, by name and namespace, to add to the Jinja
+            environment.
+    Default: {}
+--TemplateExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--TemplateExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+--TemplateExporter.raw_mimetypes=<list-item-1>...
+    formats of raw cells to be included in this Exporter's output.
+    Default: []
+--TemplateExporter.template_extension=<Unicode>
+    Default: ''
+--TemplateExporter.template_file=<Unicode>
+    Name of the template file to use
+    Default: None
+--TemplateExporter.template_name=<Unicode>
+    Name of the template to use
+    Default: ''
+--TemplateExporter.template_paths=<list-item-1>...
+    Default: ['.']
+
+ASCIIDocExporter(TemplateExporter) options
+------------------------------------------
+--ASCIIDocExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--ASCIIDocExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--ASCIIDocExporter.exclude_code_cell=<Bool>
+    This allows you to exclude code cells from all templates if set to True.
+    Default: False
+--ASCIIDocExporter.exclude_input=<Bool>
+    This allows you to exclude code cell inputs from all templates if set to
+    True.
+    Default: False
+--ASCIIDocExporter.exclude_input_prompt=<Bool>
+    This allows you to exclude input prompts from all templates if set to True.
+    Default: False
+--ASCIIDocExporter.exclude_markdown=<Bool>
+    This allows you to exclude markdown cells from all templates if set to True.
+    Default: False
+--ASCIIDocExporter.exclude_output=<Bool>
+    This allows you to exclude code cell outputs from all templates if set to
+    True.
+    Default: False
+--ASCIIDocExporter.exclude_output_prompt=<Bool>
+    This allows you to exclude output prompts from all templates if set to True.
+    Default: False
+--ASCIIDocExporter.exclude_output_stdin=<Bool>
+    This allows you to exclude output of stdin stream from lab template if set
+    to True.
+    Default: True
+--ASCIIDocExporter.exclude_raw=<Bool>
+    This allows you to exclude raw cells from all templates if set to True.
+    Default: False
+--ASCIIDocExporter.exclude_unknown=<Bool>
+    This allows you to exclude unknown cells from all templates if set to True.
+    Default: False
+--ASCIIDocExporter.extra_template_basedirs=<list-item-1>...
+    Default: []
+--ASCIIDocExporter.extra_template_paths=<list-item-1>...
+    Default: []
+--ASCIIDocExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--ASCIIDocExporter.filters=<key-1>=<value-1>...
+    Dictionary of filters, by name and namespace, to add to the Jinja
+            environment.
+    Default: {}
+--ASCIIDocExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--ASCIIDocExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+--ASCIIDocExporter.raw_mimetypes=<list-item-1>...
+    formats of raw cells to be included in this Exporter's output.
+    Default: []
+--ASCIIDocExporter.template_extension=<Unicode>
+    Default: ''
+--ASCIIDocExporter.template_file=<Unicode>
+    Name of the template file to use
+    Default: None
+--ASCIIDocExporter.template_name=<Unicode>
+    Name of the template to use
+    Default: ''
+--ASCIIDocExporter.template_paths=<list-item-1>...
+    Default: ['.']
+
+HTMLExporter(TemplateExporter) options
+--------------------------------------
+--HTMLExporter.anchor_link_text=<Unicode>
+    The text used as the text for anchor links.
+    Default: '¶'
+--HTMLExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--HTMLExporter.embed_images=<Bool>
+    Whether or not to embed images as base64 in markdown cells.
+    Default: False
+--HTMLExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--HTMLExporter.exclude_anchor_links=<Bool>
+    If anchor links should be included or not.
+    Default: False
+--HTMLExporter.exclude_code_cell=<Bool>
+    This allows you to exclude code cells from all templates if set to True.
+    Default: False
+--HTMLExporter.exclude_input=<Bool>
+    This allows you to exclude code cell inputs from all templates if set to
+    True.
+    Default: False
+--HTMLExporter.exclude_input_prompt=<Bool>
+    This allows you to exclude input prompts from all templates if set to True.
+    Default: False
+--HTMLExporter.exclude_markdown=<Bool>
+    This allows you to exclude markdown cells from all templates if set to True.
+    Default: False
+--HTMLExporter.exclude_output=<Bool>
+    This allows you to exclude code cell outputs from all templates if set to
+    True.
+    Default: False
+--HTMLExporter.exclude_output_prompt=<Bool>
+    This allows you to exclude output prompts from all templates if set to True.
+    Default: False
+--HTMLExporter.exclude_output_stdin=<Bool>
+    This allows you to exclude output of stdin stream from lab template if set
+    to True.
+    Default: True
+--HTMLExporter.exclude_raw=<Bool>
+    This allows you to exclude raw cells from all templates if set to True.
+    Default: False
+--HTMLExporter.exclude_unknown=<Bool>
+    This allows you to exclude unknown cells from all templates if set to True.
+    Default: False
+--HTMLExporter.extra_template_basedirs=<list-item-1>...
+    Default: []
+--HTMLExporter.extra_template_paths=<list-item-1>...
+    Default: []
+--HTMLExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--HTMLExporter.filters=<key-1>=<value-1>...
+    Dictionary of filters, by name and namespace, to add to the Jinja
+            environment.
+    Default: {}
+--HTMLExporter.html_manager_semver_range=<Unicode>
+    Semver range for Jupyter widgets HTML manager
+    Default: '*'
+--HTMLExporter.jquery_url=<Unicode>
+    URL to load jQuery from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.m...
+--HTMLExporter.jupyter_widgets_base_url=<Unicode>
+    URL base for Jupyter widgets
+    Default: 'https://unpkg.com/'
+--HTMLExporter.language_code=<Unicode>
+    Language code of the content, should be one of the ISO639-1
+    Default: 'en'
+--HTMLExporter.mathjax_url=<Unicode>
+    URL to load Mathjax from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest....
+--HTMLExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--HTMLExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+--HTMLExporter.raw_mimetypes=<list-item-1>...
+    formats of raw cells to be included in this Exporter's output.
+    Default: []
+--HTMLExporter.require_js_url=<Unicode>
+    URL to load require.js from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/req...
+--HTMLExporter.sanitize_html=<Bool>
+    Whether the HTML in Markdown cells and cell outputs should be sanitized.This
+    should be set to True by nbviewer or similar tools.
+    Default: False
+--HTMLExporter.skip_svg_encoding=<Bool>
+    Whether the svg to image data attribute encoding should occur
+    Default: False
+--HTMLExporter.template_extension=<Unicode>
+    Default: ''
+--HTMLExporter.template_file=<Unicode>
+    Name of the template file to use
+    Default: None
+--HTMLExporter.template_name=<Unicode>
+    Name of the template to use
+    Default: ''
+--HTMLExporter.template_paths=<list-item-1>...
+    Default: ['.']
+--HTMLExporter.theme=<Unicode>
+    Template specific theme(e.g. the name of a JupyterLab CSS theme distributed
+    as prebuilt extension for the lab template)
+    Default: 'light'
+--HTMLExporter.widget_renderer_url=<Unicode>
+    Full URL for Jupyter widgets
+    Default: ''
+
+LatexExporter(TemplateExporter) options
+---------------------------------------
+--LatexExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--LatexExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--LatexExporter.exclude_code_cell=<Bool>
+    This allows you to exclude code cells from all templates if set to True.
+    Default: False
+--LatexExporter.exclude_input=<Bool>
+    This allows you to exclude code cell inputs from all templates if set to
+    True.
+    Default: False
+--LatexExporter.exclude_input_prompt=<Bool>
+    This allows you to exclude input prompts from all templates if set to True.
+    Default: False
+--LatexExporter.exclude_markdown=<Bool>
+    This allows you to exclude markdown cells from all templates if set to True.
+    Default: False
+--LatexExporter.exclude_output=<Bool>
+    This allows you to exclude code cell outputs from all templates if set to
+    True.
+    Default: False
+--LatexExporter.exclude_output_prompt=<Bool>
+    This allows you to exclude output prompts from all templates if set to True.
+    Default: False
+--LatexExporter.exclude_output_stdin=<Bool>
+    This allows you to exclude output of stdin stream from lab template if set
+    to True.
+    Default: True
+--LatexExporter.exclude_raw=<Bool>
+    This allows you to exclude raw cells from all templates if set to True.
+    Default: False
+--LatexExporter.exclude_unknown=<Bool>
+    This allows you to exclude unknown cells from all templates if set to True.
+    Default: False
+--LatexExporter.extra_template_basedirs=<list-item-1>...
+    Default: []
+--LatexExporter.extra_template_paths=<list-item-1>...
+    Default: []
+--LatexExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--LatexExporter.filters=<key-1>=<value-1>...
+    Dictionary of filters, by name and namespace, to add to the Jinja
+            environment.
+    Default: {}
+--LatexExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--LatexExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+--LatexExporter.raw_mimetypes=<list-item-1>...
+    formats of raw cells to be included in this Exporter's output.
+    Default: []
+--LatexExporter.template_extension=<Unicode>
+    Default: ''
+--LatexExporter.template_file=<Unicode>
+    Name of the template file to use
+    Default: None
+--LatexExporter.template_name=<Unicode>
+    Name of the template to use
+    Default: ''
+--LatexExporter.template_paths=<list-item-1>...
+    Default: ['.']
+
+MarkdownExporter(TemplateExporter) options
+------------------------------------------
+--MarkdownExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--MarkdownExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--MarkdownExporter.exclude_code_cell=<Bool>
+    This allows you to exclude code cells from all templates if set to True.
+    Default: False
+--MarkdownExporter.exclude_input=<Bool>
+    This allows you to exclude code cell inputs from all templates if set to
+    True.
+    Default: False
+--MarkdownExporter.exclude_input_prompt=<Bool>
+    This allows you to exclude input prompts from all templates if set to True.
+    Default: False
+--MarkdownExporter.exclude_markdown=<Bool>
+    This allows you to exclude markdown cells from all templates if set to True.
+    Default: False
+--MarkdownExporter.exclude_output=<Bool>
+    This allows you to exclude code cell outputs from all templates if set to
+    True.
+    Default: False
+--MarkdownExporter.exclude_output_prompt=<Bool>
+    This allows you to exclude output prompts from all templates if set to True.
+    Default: False
+--MarkdownExporter.exclude_output_stdin=<Bool>
+    This allows you to exclude output of stdin stream from lab template if set
+    to True.
+    Default: True
+--MarkdownExporter.exclude_raw=<Bool>
+    This allows you to exclude raw cells from all templates if set to True.
+    Default: False
+--MarkdownExporter.exclude_unknown=<Bool>
+    This allows you to exclude unknown cells from all templates if set to True.
+    Default: False
+--MarkdownExporter.extra_template_basedirs=<list-item-1>...
+    Default: []
+--MarkdownExporter.extra_template_paths=<list-item-1>...
+    Default: []
+--MarkdownExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--MarkdownExporter.filters=<key-1>=<value-1>...
+    Dictionary of filters, by name and namespace, to add to the Jinja
+            environment.
+    Default: {}
+--MarkdownExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--MarkdownExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+--MarkdownExporter.raw_mimetypes=<list-item-1>...
+    formats of raw cells to be included in this Exporter's output.
+    Default: []
+--MarkdownExporter.template_extension=<Unicode>
+    Default: ''
+--MarkdownExporter.template_file=<Unicode>
+    Name of the template file to use
+    Default: None
+--MarkdownExporter.template_name=<Unicode>
+    Name of the template to use
+    Default: ''
+--MarkdownExporter.template_paths=<list-item-1>...
+    Default: ['.']
+
+NotebookExporter(Exporter) options
+----------------------------------
+--NotebookExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--NotebookExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--NotebookExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--NotebookExporter.nbformat_version=<Enum>
+    The nbformat version to write.
+            Use this to downgrade notebooks.
+    Choices: any of [1, 2, 3, 4]
+    Default: 4
+--NotebookExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--NotebookExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+
+PDFExporter(LatexExporter) options
+----------------------------------
+--PDFExporter.bib_command=<list-item-1>...
+    Shell command used to run bibtex.
+    Default: ['bibtex', '{filename}']
+--PDFExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--PDFExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--PDFExporter.exclude_code_cell=<Bool>
+    This allows you to exclude code cells from all templates if set to True.
+    Default: False
+--PDFExporter.exclude_input=<Bool>
+    This allows you to exclude code cell inputs from all templates if set to
+    True.
+    Default: False
+--PDFExporter.exclude_input_prompt=<Bool>
+    This allows you to exclude input prompts from all templates if set to True.
+    Default: False
+--PDFExporter.exclude_markdown=<Bool>
+    This allows you to exclude markdown cells from all templates if set to True.
+    Default: False
+--PDFExporter.exclude_output=<Bool>
+    This allows you to exclude code cell outputs from all templates if set to
+    True.
+    Default: False
+--PDFExporter.exclude_output_prompt=<Bool>
+    This allows you to exclude output prompts from all templates if set to True.
+    Default: False
+--PDFExporter.exclude_output_stdin=<Bool>
+    This allows you to exclude output of stdin stream from lab template if set
+    to True.
+    Default: True
+--PDFExporter.exclude_raw=<Bool>
+    This allows you to exclude raw cells from all templates if set to True.
+    Default: False
+--PDFExporter.exclude_unknown=<Bool>
+    This allows you to exclude unknown cells from all templates if set to True.
+    Default: False
+--PDFExporter.extra_template_basedirs=<list-item-1>...
+    Default: []
+--PDFExporter.extra_template_paths=<list-item-1>...
+    Default: []
+--PDFExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--PDFExporter.filters=<key-1>=<value-1>...
+    Dictionary of filters, by name and namespace, to add to the Jinja
+            environment.
+    Default: {}
+--PDFExporter.latex_command=<list-item-1>...
+    Shell command used to compile latex.
+    Default: ['xelatex', '{filename}', '-quiet']
+--PDFExporter.latex_count=<Int>
+    How many times latex will be called.
+    Default: 3
+--PDFExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--PDFExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+--PDFExporter.raw_mimetypes=<list-item-1>...
+    formats of raw cells to be included in this Exporter's output.
+    Default: []
+--PDFExporter.template_extension=<Unicode>
+    Default: ''
+--PDFExporter.template_file=<Unicode>
+    Name of the template file to use
+    Default: None
+--PDFExporter.template_name=<Unicode>
+    Name of the template to use
+    Default: ''
+--PDFExporter.template_paths=<list-item-1>...
+    Default: ['.']
+--PDFExporter.verbose=<Bool>
+    Whether to display the output of latex commands.
+    Default: False
+
+PythonExporter(TemplateExporter) options
+----------------------------------------
+--PythonExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--PythonExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--PythonExporter.exclude_code_cell=<Bool>
+    This allows you to exclude code cells from all templates if set to True.
+    Default: False
+--PythonExporter.exclude_input=<Bool>
+    This allows you to exclude code cell inputs from all templates if set to
+    True.
+    Default: False
+--PythonExporter.exclude_input_prompt=<Bool>
+    This allows you to exclude input prompts from all templates if set to True.
+    Default: False
+--PythonExporter.exclude_markdown=<Bool>
+    This allows you to exclude markdown cells from all templates if set to True.
+    Default: False
+--PythonExporter.exclude_output=<Bool>
+    This allows you to exclude code cell outputs from all templates if set to
+    True.
+    Default: False
+--PythonExporter.exclude_output_prompt=<Bool>
+    This allows you to exclude output prompts from all templates if set to True.
+    Default: False
+--PythonExporter.exclude_output_stdin=<Bool>
+    This allows you to exclude output of stdin stream from lab template if set
+    to True.
+    Default: True
+--PythonExporter.exclude_raw=<Bool>
+    This allows you to exclude raw cells from all templates if set to True.
+    Default: False
+--PythonExporter.exclude_unknown=<Bool>
+    This allows you to exclude unknown cells from all templates if set to True.
+    Default: False
+--PythonExporter.extra_template_basedirs=<list-item-1>...
+    Default: []
+--PythonExporter.extra_template_paths=<list-item-1>...
+    Default: []
+--PythonExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--PythonExporter.filters=<key-1>=<value-1>...
+    Dictionary of filters, by name and namespace, to add to the Jinja
+            environment.
+    Default: {}
+--PythonExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--PythonExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+--PythonExporter.raw_mimetypes=<list-item-1>...
+    formats of raw cells to be included in this Exporter's output.
+    Default: []
+--PythonExporter.template_extension=<Unicode>
+    Default: ''
+--PythonExporter.template_file=<Unicode>
+    Name of the template file to use
+    Default: None
+--PythonExporter.template_name=<Unicode>
+    Name of the template to use
+    Default: ''
+--PythonExporter.template_paths=<list-item-1>...
+    Default: ['.']
+
+QtExporter(HTMLExporter) options
+--------------------------------
+--QtExporter.anchor_link_text=<Unicode>
+    The text used as the text for anchor links.
+    Default: '¶'
+--QtExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--QtExporter.embed_images=<Bool>
+    Whether or not to embed images as base64 in markdown cells.
+    Default: False
+--QtExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--QtExporter.exclude_anchor_links=<Bool>
+    If anchor links should be included or not.
+    Default: False
+--QtExporter.exclude_code_cell=<Bool>
+    This allows you to exclude code cells from all templates if set to True.
+    Default: False
+--QtExporter.exclude_input=<Bool>
+    This allows you to exclude code cell inputs from all templates if set to
+    True.
+    Default: False
+--QtExporter.exclude_input_prompt=<Bool>
+    This allows you to exclude input prompts from all templates if set to True.
+    Default: False
+--QtExporter.exclude_markdown=<Bool>
+    This allows you to exclude markdown cells from all templates if set to True.
+    Default: False
+--QtExporter.exclude_output=<Bool>
+    This allows you to exclude code cell outputs from all templates if set to
+    True.
+    Default: False
+--QtExporter.exclude_output_prompt=<Bool>
+    This allows you to exclude output prompts from all templates if set to True.
+    Default: False
+--QtExporter.exclude_output_stdin=<Bool>
+    This allows you to exclude output of stdin stream from lab template if set
+    to True.
+    Default: True
+--QtExporter.exclude_raw=<Bool>
+    This allows you to exclude raw cells from all templates if set to True.
+    Default: False
+--QtExporter.exclude_unknown=<Bool>
+    This allows you to exclude unknown cells from all templates if set to True.
+    Default: False
+--QtExporter.extra_template_basedirs=<list-item-1>...
+    Default: []
+--QtExporter.extra_template_paths=<list-item-1>...
+    Default: []
+--QtExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--QtExporter.filters=<key-1>=<value-1>...
+    Dictionary of filters, by name and namespace, to add to the Jinja
+            environment.
+    Default: {}
+--QtExporter.html_manager_semver_range=<Unicode>
+    Semver range for Jupyter widgets HTML manager
+    Default: '*'
+--QtExporter.jquery_url=<Unicode>
+    URL to load jQuery from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.m...
+--QtExporter.jupyter_widgets_base_url=<Unicode>
+    URL base for Jupyter widgets
+    Default: 'https://unpkg.com/'
+--QtExporter.language_code=<Unicode>
+    Language code of the content, should be one of the ISO639-1
+    Default: 'en'
+--QtExporter.mathjax_url=<Unicode>
+    URL to load Mathjax from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest....
+--QtExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--QtExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+--QtExporter.raw_mimetypes=<list-item-1>...
+    formats of raw cells to be included in this Exporter's output.
+    Default: []
+--QtExporter.require_js_url=<Unicode>
+    URL to load require.js from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/req...
+--QtExporter.sanitize_html=<Bool>
+    Whether the HTML in Markdown cells and cell outputs should be sanitized.This
+    should be set to True by nbviewer or similar tools.
+    Default: False
+--QtExporter.skip_svg_encoding=<Bool>
+    Whether the svg to image data attribute encoding should occur
+    Default: False
+--QtExporter.template_extension=<Unicode>
+    Default: ''
+--QtExporter.template_file=<Unicode>
+    Name of the template file to use
+    Default: None
+--QtExporter.template_name=<Unicode>
+    Name of the template to use
+    Default: ''
+--QtExporter.template_paths=<list-item-1>...
+    Default: ['.']
+--QtExporter.theme=<Unicode>
+    Template specific theme(e.g. the name of a JupyterLab CSS theme distributed
+    as prebuilt extension for the lab template)
+    Default: 'light'
+--QtExporter.widget_renderer_url=<Unicode>
+    Full URL for Jupyter widgets
+    Default: ''
+
+QtPDFExporter(QtExporter) options
+---------------------------------
+--QtPDFExporter.anchor_link_text=<Unicode>
+    The text used as the text for anchor links.
+    Default: '¶'
+--QtPDFExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--QtPDFExporter.embed_images=<Bool>
+    Whether or not to embed images as base64 in markdown cells.
+    Default: False
+--QtPDFExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--QtPDFExporter.exclude_anchor_links=<Bool>
+    If anchor links should be included or not.
+    Default: False
+--QtPDFExporter.exclude_code_cell=<Bool>
+    This allows you to exclude code cells from all templates if set to True.
+    Default: False
+--QtPDFExporter.exclude_input=<Bool>
+    This allows you to exclude code cell inputs from all templates if set to
+    True.
+    Default: False
+--QtPDFExporter.exclude_input_prompt=<Bool>
+    This allows you to exclude input prompts from all templates if set to True.
+    Default: False
+--QtPDFExporter.exclude_markdown=<Bool>
+    This allows you to exclude markdown cells from all templates if set to True.
+    Default: False
+--QtPDFExporter.exclude_output=<Bool>
+    This allows you to exclude code cell outputs from all templates if set to
+    True.
+    Default: False
+--QtPDFExporter.exclude_output_prompt=<Bool>
+    This allows you to exclude output prompts from all templates if set to True.
+    Default: False
+--QtPDFExporter.exclude_output_stdin=<Bool>
+    This allows you to exclude output of stdin stream from lab template if set
+    to True.
+    Default: True
+--QtPDFExporter.exclude_raw=<Bool>
+    This allows you to exclude raw cells from all templates if set to True.
+    Default: False
+--QtPDFExporter.exclude_unknown=<Bool>
+    This allows you to exclude unknown cells from all templates if set to True.
+    Default: False
+--QtPDFExporter.extra_template_basedirs=<list-item-1>...
+    Default: []
+--QtPDFExporter.extra_template_paths=<list-item-1>...
+    Default: []
+--QtPDFExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--QtPDFExporter.filters=<key-1>=<value-1>...
+    Dictionary of filters, by name and namespace, to add to the Jinja
+            environment.
+    Default: {}
+--QtPDFExporter.html_manager_semver_range=<Unicode>
+    Semver range for Jupyter widgets HTML manager
+    Default: '*'
+--QtPDFExporter.jquery_url=<Unicode>
+    URL to load jQuery from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.m...
+--QtPDFExporter.jupyter_widgets_base_url=<Unicode>
+    URL base for Jupyter widgets
+    Default: 'https://unpkg.com/'
+--QtPDFExporter.language_code=<Unicode>
+    Language code of the content, should be one of the ISO639-1
+    Default: 'en'
+--QtPDFExporter.mathjax_url=<Unicode>
+    URL to load Mathjax from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest....
+--QtPDFExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--QtPDFExporter.paginate=<Bool>
+    Split generated notebook into multiple pages.
+    If False, a PDF with one long page will be generated.
+    Set to True to match behavior of LaTeX based PDF generator
+    Default: True
+--QtPDFExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+--QtPDFExporter.raw_mimetypes=<list-item-1>...
+    formats of raw cells to be included in this Exporter's output.
+    Default: []
+--QtPDFExporter.require_js_url=<Unicode>
+    URL to load require.js from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/req...
+--QtPDFExporter.sanitize_html=<Bool>
+    Whether the HTML in Markdown cells and cell outputs should be sanitized.This
+    should be set to True by nbviewer or similar tools.
+    Default: False
+--QtPDFExporter.skip_svg_encoding=<Bool>
+    Whether the svg to image data attribute encoding should occur
+    Default: False
+--QtPDFExporter.template_extension=<Unicode>
+    Default: ''
+--QtPDFExporter.template_file=<Unicode>
+    Name of the template file to use
+    Default: None
+--QtPDFExporter.template_name=<Unicode>
+    Name of the template to use
+    Default: ''
+--QtPDFExporter.template_paths=<list-item-1>...
+    Default: ['.']
+--QtPDFExporter.theme=<Unicode>
+    Template specific theme(e.g. the name of a JupyterLab CSS theme distributed
+    as prebuilt extension for the lab template)
+    Default: 'light'
+--QtPDFExporter.widget_renderer_url=<Unicode>
+    Full URL for Jupyter widgets
+    Default: ''
+
+QtPNGExporter(QtExporter) options
+---------------------------------
+--QtPNGExporter.anchor_link_text=<Unicode>
+    The text used as the text for anchor links.
+    Default: '¶'
+--QtPNGExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--QtPNGExporter.embed_images=<Bool>
+    Whether or not to embed images as base64 in markdown cells.
+    Default: False
+--QtPNGExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--QtPNGExporter.exclude_anchor_links=<Bool>
+    If anchor links should be included or not.
+    Default: False
+--QtPNGExporter.exclude_code_cell=<Bool>
+    This allows you to exclude code cells from all templates if set to True.
+    Default: False
+--QtPNGExporter.exclude_input=<Bool>
+    This allows you to exclude code cell inputs from all templates if set to
+    True.
+    Default: False
+--QtPNGExporter.exclude_input_prompt=<Bool>
+    This allows you to exclude input prompts from all templates if set to True.
+    Default: False
+--QtPNGExporter.exclude_markdown=<Bool>
+    This allows you to exclude markdown cells from all templates if set to True.
+    Default: False
+--QtPNGExporter.exclude_output=<Bool>
+    This allows you to exclude code cell outputs from all templates if set to
+    True.
+    Default: False
+--QtPNGExporter.exclude_output_prompt=<Bool>
+    This allows you to exclude output prompts from all templates if set to True.
+    Default: False
+--QtPNGExporter.exclude_output_stdin=<Bool>
+    This allows you to exclude output of stdin stream from lab template if set
+    to True.
+    Default: True
+--QtPNGExporter.exclude_raw=<Bool>
+    This allows you to exclude raw cells from all templates if set to True.
+    Default: False
+--QtPNGExporter.exclude_unknown=<Bool>
+    This allows you to exclude unknown cells from all templates if set to True.
+    Default: False
+--QtPNGExporter.extra_template_basedirs=<list-item-1>...
+    Default: []
+--QtPNGExporter.extra_template_paths=<list-item-1>...
+    Default: []
+--QtPNGExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--QtPNGExporter.filters=<key-1>=<value-1>...
+    Dictionary of filters, by name and namespace, to add to the Jinja
+            environment.
+    Default: {}
+--QtPNGExporter.html_manager_semver_range=<Unicode>
+    Semver range for Jupyter widgets HTML manager
+    Default: '*'
+--QtPNGExporter.jquery_url=<Unicode>
+    URL to load jQuery from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.m...
+--QtPNGExporter.jupyter_widgets_base_url=<Unicode>
+    URL base for Jupyter widgets
+    Default: 'https://unpkg.com/'
+--QtPNGExporter.language_code=<Unicode>
+    Language code of the content, should be one of the ISO639-1
+    Default: 'en'
+--QtPNGExporter.mathjax_url=<Unicode>
+    URL to load Mathjax from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest....
+--QtPNGExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--QtPNGExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+--QtPNGExporter.raw_mimetypes=<list-item-1>...
+    formats of raw cells to be included in this Exporter's output.
+    Default: []
+--QtPNGExporter.require_js_url=<Unicode>
+    URL to load require.js from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/req...
+--QtPNGExporter.sanitize_html=<Bool>
+    Whether the HTML in Markdown cells and cell outputs should be sanitized.This
+    should be set to True by nbviewer or similar tools.
+    Default: False
+--QtPNGExporter.skip_svg_encoding=<Bool>
+    Whether the svg to image data attribute encoding should occur
+    Default: False
+--QtPNGExporter.template_extension=<Unicode>
+    Default: ''
+--QtPNGExporter.template_file=<Unicode>
+    Name of the template file to use
+    Default: None
+--QtPNGExporter.template_name=<Unicode>
+    Name of the template to use
+    Default: ''
+--QtPNGExporter.template_paths=<list-item-1>...
+    Default: ['.']
+--QtPNGExporter.theme=<Unicode>
+    Template specific theme(e.g. the name of a JupyterLab CSS theme distributed
+    as prebuilt extension for the lab template)
+    Default: 'light'
+--QtPNGExporter.widget_renderer_url=<Unicode>
+    Full URL for Jupyter widgets
+    Default: ''
+
+RSTExporter(TemplateExporter) options
+-------------------------------------
+--RSTExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--RSTExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--RSTExporter.exclude_code_cell=<Bool>
+    This allows you to exclude code cells from all templates if set to True.
+    Default: False
+--RSTExporter.exclude_input=<Bool>
+    This allows you to exclude code cell inputs from all templates if set to
+    True.
+    Default: False
+--RSTExporter.exclude_input_prompt=<Bool>
+    This allows you to exclude input prompts from all templates if set to True.
+    Default: False
+--RSTExporter.exclude_markdown=<Bool>
+    This allows you to exclude markdown cells from all templates if set to True.
+    Default: False
+--RSTExporter.exclude_output=<Bool>
+    This allows you to exclude code cell outputs from all templates if set to
+    True.
+    Default: False
+--RSTExporter.exclude_output_prompt=<Bool>
+    This allows you to exclude output prompts from all templates if set to True.
+    Default: False
+--RSTExporter.exclude_output_stdin=<Bool>
+    This allows you to exclude output of stdin stream from lab template if set
+    to True.
+    Default: True
+--RSTExporter.exclude_raw=<Bool>
+    This allows you to exclude raw cells from all templates if set to True.
+    Default: False
+--RSTExporter.exclude_unknown=<Bool>
+    This allows you to exclude unknown cells from all templates if set to True.
+    Default: False
+--RSTExporter.extra_template_basedirs=<list-item-1>...
+    Default: []
+--RSTExporter.extra_template_paths=<list-item-1>...
+    Default: []
+--RSTExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--RSTExporter.filters=<key-1>=<value-1>...
+    Dictionary of filters, by name and namespace, to add to the Jinja
+            environment.
+    Default: {}
+--RSTExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--RSTExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+--RSTExporter.raw_mimetypes=<list-item-1>...
+    formats of raw cells to be included in this Exporter's output.
+    Default: []
+--RSTExporter.template_extension=<Unicode>
+    Default: ''
+--RSTExporter.template_file=<Unicode>
+    Name of the template file to use
+    Default: None
+--RSTExporter.template_name=<Unicode>
+    Name of the template to use
+    Default: ''
+--RSTExporter.template_paths=<list-item-1>...
+    Default: ['.']
+
+ScriptExporter(TemplateExporter) options
+----------------------------------------
+--ScriptExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--ScriptExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--ScriptExporter.exclude_code_cell=<Bool>
+    This allows you to exclude code cells from all templates if set to True.
+    Default: False
+--ScriptExporter.exclude_input=<Bool>
+    This allows you to exclude code cell inputs from all templates if set to
+    True.
+    Default: False
+--ScriptExporter.exclude_input_prompt=<Bool>
+    This allows you to exclude input prompts from all templates if set to True.
+    Default: False
+--ScriptExporter.exclude_markdown=<Bool>
+    This allows you to exclude markdown cells from all templates if set to True.
+    Default: False
+--ScriptExporter.exclude_output=<Bool>
+    This allows you to exclude code cell outputs from all templates if set to
+    True.
+    Default: False
+--ScriptExporter.exclude_output_prompt=<Bool>
+    This allows you to exclude output prompts from all templates if set to True.
+    Default: False
+--ScriptExporter.exclude_output_stdin=<Bool>
+    This allows you to exclude output of stdin stream from lab template if set
+    to True.
+    Default: True
+--ScriptExporter.exclude_raw=<Bool>
+    This allows you to exclude raw cells from all templates if set to True.
+    Default: False
+--ScriptExporter.exclude_unknown=<Bool>
+    This allows you to exclude unknown cells from all templates if set to True.
+    Default: False
+--ScriptExporter.extra_template_basedirs=<list-item-1>...
+    Default: []
+--ScriptExporter.extra_template_paths=<list-item-1>...
+    Default: []
+--ScriptExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--ScriptExporter.filters=<key-1>=<value-1>...
+    Dictionary of filters, by name and namespace, to add to the Jinja
+            environment.
+    Default: {}
+--ScriptExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--ScriptExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+--ScriptExporter.raw_mimetypes=<list-item-1>...
+    formats of raw cells to be included in this Exporter's output.
+    Default: []
+--ScriptExporter.template_extension=<Unicode>
+    Default: ''
+--ScriptExporter.template_file=<Unicode>
+    Name of the template file to use
+    Default: None
+--ScriptExporter.template_name=<Unicode>
+    Name of the template to use
+    Default: ''
+--ScriptExporter.template_paths=<list-item-1>...
+    Default: ['.']
+
+SlidesExporter(HTMLExporter) options
+------------------------------------
+--SlidesExporter.anchor_link_text=<Unicode>
+    The text used as the text for anchor links.
+    Default: '¶'
+--SlidesExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--SlidesExporter.embed_images=<Bool>
+    Whether or not to embed images as base64 in markdown cells.
+    Default: False
+--SlidesExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--SlidesExporter.exclude_anchor_links=<Bool>
+    If anchor links should be included or not.
+    Default: False
+--SlidesExporter.exclude_code_cell=<Bool>
+    This allows you to exclude code cells from all templates if set to True.
+    Default: False
+--SlidesExporter.exclude_input=<Bool>
+    This allows you to exclude code cell inputs from all templates if set to
+    True.
+    Default: False
+--SlidesExporter.exclude_input_prompt=<Bool>
+    This allows you to exclude input prompts from all templates if set to True.
+    Default: False
+--SlidesExporter.exclude_markdown=<Bool>
+    This allows you to exclude markdown cells from all templates if set to True.
+    Default: False
+--SlidesExporter.exclude_output=<Bool>
+    This allows you to exclude code cell outputs from all templates if set to
+    True.
+    Default: False
+--SlidesExporter.exclude_output_prompt=<Bool>
+    This allows you to exclude output prompts from all templates if set to True.
+    Default: False
+--SlidesExporter.exclude_output_stdin=<Bool>
+    This allows you to exclude output of stdin stream from lab template if set
+    to True.
+    Default: True
+--SlidesExporter.exclude_raw=<Bool>
+    This allows you to exclude raw cells from all templates if set to True.
+    Default: False
+--SlidesExporter.exclude_unknown=<Bool>
+    This allows you to exclude unknown cells from all templates if set to True.
+    Default: False
+--SlidesExporter.extra_template_basedirs=<list-item-1>...
+    Default: []
+--SlidesExporter.extra_template_paths=<list-item-1>...
+    Default: []
+--SlidesExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--SlidesExporter.filters=<key-1>=<value-1>...
+    Dictionary of filters, by name and namespace, to add to the Jinja
+            environment.
+    Default: {}
+--SlidesExporter.font_awesome_url=<Unicode>
+    URL to load font awesome from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/cs...
+--SlidesExporter.html_manager_semver_range=<Unicode>
+    Semver range for Jupyter widgets HTML manager
+    Default: '*'
+--SlidesExporter.jquery_url=<Unicode>
+    URL to load jQuery from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.m...
+--SlidesExporter.jupyter_widgets_base_url=<Unicode>
+    URL base for Jupyter widgets
+    Default: 'https://unpkg.com/'
+--SlidesExporter.language_code=<Unicode>
+    Language code of the content, should be one of the ISO639-1
+    Default: 'en'
+--SlidesExporter.mathjax_url=<Unicode>
+    URL to load Mathjax from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest....
+--SlidesExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--SlidesExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+--SlidesExporter.raw_mimetypes=<list-item-1>...
+    formats of raw cells to be included in this Exporter's output.
+    Default: []
+--SlidesExporter.require_js_url=<Unicode>
+    URL to load require.js from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/req...
+--SlidesExporter.reveal_height=<Unicode>
+    height used to determine the aspect ratio of your presentation. Use the
+    horizontal pixels available on your intended presentation equipment.
+    Default: ''
+--SlidesExporter.reveal_number=<Unicode>
+    slide number format (e.g. 'c/t'). Choose from: 'c': current, 't': total,
+    'h': horizontal, 'v': vertical
+    Default: ''
+--SlidesExporter.reveal_scroll=<Bool>
+    If True, enable scrolling within each slide
+    Default: False
+--SlidesExporter.reveal_theme=<Unicode>
+    Name of the reveal.js theme to use.
+    We look for a file with this name under
+    ``reveal_url_prefix``/css/theme/``reveal_theme``.css.
+    https://github.com/hakimel/reveal.js/tree/master/css/theme has list of
+    themes that ship by default with reveal.js.
+    Default: 'simple'
+--SlidesExporter.reveal_transition=<Unicode>
+    Name of the reveal.js transition to use.
+    The list of transitions that ships by default with reveal.js are: none,
+    fade, slide, convex, concave and zoom.
+    Default: 'slide'
+--SlidesExporter.reveal_url_prefix=<Unicode>
+    The URL prefix for reveal.js (version 3.x).
+            This defaults to the reveal CDN, but can be any url pointing to a copy
+            of reveal.js.
+            For speaker notes to work, this must be a relative path to a local
+            copy of reveal.js: e.g., "reveal.js".
+            If a relative path is given, it must be a subdirectory of the
+            current directory (from which the server is run).
+            See the usage documentation
+            (https://nbconvert.readthedocs.io/en/latest/usage.html#reveal-js-html-slideshow)
+            for more details.
+    Default: ''
+--SlidesExporter.reveal_width=<Unicode>
+    width used to determine the aspect ratio of your presentation. Use the
+    horizontal pixels available on your intended presentation equipment.
+    Default: ''
+--SlidesExporter.sanitize_html=<Bool>
+    Whether the HTML in Markdown cells and cell outputs should be sanitized.This
+    should be set to True by nbviewer or similar tools.
+    Default: False
+--SlidesExporter.skip_svg_encoding=<Bool>
+    Whether the svg to image data attribute encoding should occur
+    Default: False
+--SlidesExporter.template_extension=<Unicode>
+    Default: ''
+--SlidesExporter.template_file=<Unicode>
+    Name of the template file to use
+    Default: None
+--SlidesExporter.template_name=<Unicode>
+    Name of the template to use
+    Default: ''
+--SlidesExporter.template_paths=<list-item-1>...
+    Default: ['.']
+--SlidesExporter.theme=<Unicode>
+    Template specific theme(e.g. the name of a JupyterLab CSS theme distributed
+    as prebuilt extension for the lab template)
+    Default: 'light'
+--SlidesExporter.widget_renderer_url=<Unicode>
+    Full URL for Jupyter widgets
+    Default: ''
+
+WebPDFExporter(HTMLExporter) options
+------------------------------------
+--WebPDFExporter.allow_chromium_download=<Bool>
+    Whether to allow downloading Chromium if no suitable version is found on the
+    system.
+    Default: False
+--WebPDFExporter.anchor_link_text=<Unicode>
+    The text used as the text for anchor links.
+    Default: '¶'
+--WebPDFExporter.default_preprocessors=<list-item-1>...
+    List of preprocessors available by default, by name, namespace,
+            instance, or type.
+    Default: ['nbconvert.preprocessors.TagRemovePreprocessor', 'nbconvert....
+--WebPDFExporter.disable_sandbox=<Bool>
+    Disable chromium security sandbox when converting to PDF.
+    WARNING: This could cause arbitrary code execution in specific
+    circumstances, where JS in your notebook can execute serverside code! Please
+    use with caution.
+    ``https://github.com/puppeteer/puppeteer/blob/main@%7B2020-12-
+    14T17:22:24Z%7D/docs/troubleshooting.md#setting-up-chrome-linux-sandbox``
+    has more information.
+    This is required for webpdf to work inside most container environments.
+    Default: False
+--WebPDFExporter.embed_images=<Bool>
+    Whether or not to embed images as base64 in markdown cells.
+    Default: False
+--WebPDFExporter.enabled=<Bool>
+    Disable this exporter (and any exporters inherited from it).
+    Default: True
+--WebPDFExporter.exclude_anchor_links=<Bool>
+    If anchor links should be included or not.
+    Default: False
+--WebPDFExporter.exclude_code_cell=<Bool>
+    This allows you to exclude code cells from all templates if set to True.
+    Default: False
+--WebPDFExporter.exclude_input=<Bool>
+    This allows you to exclude code cell inputs from all templates if set to
+    True.
+    Default: False
+--WebPDFExporter.exclude_input_prompt=<Bool>
+    This allows you to exclude input prompts from all templates if set to True.
+    Default: False
+--WebPDFExporter.exclude_markdown=<Bool>
+    This allows you to exclude markdown cells from all templates if set to True.
+    Default: False
+--WebPDFExporter.exclude_output=<Bool>
+    This allows you to exclude code cell outputs from all templates if set to
+    True.
+    Default: False
+--WebPDFExporter.exclude_output_prompt=<Bool>
+    This allows you to exclude output prompts from all templates if set to True.
+    Default: False
+--WebPDFExporter.exclude_output_stdin=<Bool>
+    This allows you to exclude output of stdin stream from lab template if set
+    to True.
+    Default: True
+--WebPDFExporter.exclude_raw=<Bool>
+    This allows you to exclude raw cells from all templates if set to True.
+    Default: False
+--WebPDFExporter.exclude_unknown=<Bool>
+    This allows you to exclude unknown cells from all templates if set to True.
+    Default: False
+--WebPDFExporter.extra_template_basedirs=<list-item-1>...
+    Default: []
+--WebPDFExporter.extra_template_paths=<list-item-1>...
+    Default: []
+--WebPDFExporter.file_extension=<FilenameExtension>
+    Extension of the file that should be written to disk
+    Default: ''
+--WebPDFExporter.filters=<key-1>=<value-1>...
+    Dictionary of filters, by name and namespace, to add to the Jinja
+            environment.
+    Default: {}
+--WebPDFExporter.html_manager_semver_range=<Unicode>
+    Semver range for Jupyter widgets HTML manager
+    Default: '*'
+--WebPDFExporter.jquery_url=<Unicode>
+    URL to load jQuery from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.m...
+--WebPDFExporter.jupyter_widgets_base_url=<Unicode>
+    URL base for Jupyter widgets
+    Default: 'https://unpkg.com/'
+--WebPDFExporter.language_code=<Unicode>
+    Language code of the content, should be one of the ISO639-1
+    Default: 'en'
+--WebPDFExporter.mathjax_url=<Unicode>
+    URL to load Mathjax from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest....
+--WebPDFExporter.optimistic_validation=<Bool>
+    Reduces the number of validation steps so that it only occurs after all
+    preprocesors have run.
+    Default: False
+--WebPDFExporter.paginate=<Bool>
+    Split generated notebook into multiple pages.
+    If False, a PDF with one long page will be generated.
+    Set to True to match behavior of LaTeX based PDF generator
+    Default: True
+--WebPDFExporter.preprocessors=<list-item-1>...
+    List of preprocessors, by name or namespace, to enable.
+    Default: []
+--WebPDFExporter.raw_mimetypes=<list-item-1>...
+    formats of raw cells to be included in this Exporter's output.
+    Default: []
+--WebPDFExporter.require_js_url=<Unicode>
+    URL to load require.js from.
+    Defaults to loading from cdnjs.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/req...
+--WebPDFExporter.sanitize_html=<Bool>
+    Whether the HTML in Markdown cells and cell outputs should be sanitized.This
+    should be set to True by nbviewer or similar tools.
+    Default: False
+--WebPDFExporter.skip_svg_encoding=<Bool>
+    Whether the svg to image data attribute encoding should occur
+    Default: False
+--WebPDFExporter.template_extension=<Unicode>
+    Default: ''
+--WebPDFExporter.template_file=<Unicode>
+    Name of the template file to use
+    Default: None
+--WebPDFExporter.template_name=<Unicode>
+    Name of the template to use
+    Default: ''
+--WebPDFExporter.template_paths=<list-item-1>...
+    Default: ['.']
+--WebPDFExporter.theme=<Unicode>
+    Template specific theme(e.g. the name of a JupyterLab CSS theme distributed
+    as prebuilt extension for the lab template)
+    Default: 'light'
+--WebPDFExporter.widget_renderer_url=<Unicode>
+    Full URL for Jupyter widgets
+    Default: ''
+
+Preprocessor(NbConvertBase) options
+-----------------------------------
+--Preprocessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--Preprocessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--Preprocessor.enabled=<Bool>
+    Default: False
+
+CSSHTMLHeaderPreprocessor(Preprocessor) options
+-----------------------------------------------
+--CSSHTMLHeaderPreprocessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--CSSHTMLHeaderPreprocessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--CSSHTMLHeaderPreprocessor.enabled=<Bool>
+    Default: False
+--CSSHTMLHeaderPreprocessor.highlight_class=<Unicode>
+    CSS highlight class identifier
+    Default: '.highlight'
+--CSSHTMLHeaderPreprocessor.style=<Union>
+    Name of the pygments style to use
+    Default: <class 'jupyterlab_pygments.style.JupyterStyle'>
+
+ClearMetadataPreprocessor(Preprocessor) options
+-----------------------------------------------
+--ClearMetadataPreprocessor.clear_cell_metadata=<Bool>
+    Flag to choose if cell metadata is to be cleared in addition to notebook
+    metadata.
+    Default: True
+--ClearMetadataPreprocessor.clear_notebook_metadata=<Bool>
+    Flag to choose if notebook metadata is to be cleared in addition to cell
+    metadata.
+    Default: True
+--ClearMetadataPreprocessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--ClearMetadataPreprocessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--ClearMetadataPreprocessor.enabled=<Bool>
+    Default: False
+--ClearMetadataPreprocessor.preserve_cell_metadata_mask=<set-item-1>...
+    Indicates the key paths to preserve when deleting metadata across both cells
+    and notebook metadata fields. Tuples of keys can be passed to preserved
+    specific nested values
+    Default: set()
+--ClearMetadataPreprocessor.preserve_nb_metadata_mask=<set-item-1>...
+    Indicates the key paths to preserve when deleting metadata across both cells
+    and notebook metadata fields. Tuples of keys can be passed to preserved
+    specific nested values
+    Default: {('language_info', 'name')}
+
+ClearOutputPreprocessor(Preprocessor) options
+---------------------------------------------
+--ClearOutputPreprocessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--ClearOutputPreprocessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--ClearOutputPreprocessor.enabled=<Bool>
+    Default: False
+--ClearOutputPreprocessor.remove_metadata_fields=<set-item-1>...
+    Default: {'collapsed', 'scrolled'}
+
+CoalesceStreamsPreprocessor(Preprocessor) options
+-------------------------------------------------
+--CoalesceStreamsPreprocessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--CoalesceStreamsPreprocessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--CoalesceStreamsPreprocessor.enabled=<Bool>
+    Default: False
+
+ConvertFiguresPreprocessor(Preprocessor) options
+------------------------------------------------
+--ConvertFiguresPreprocessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--ConvertFiguresPreprocessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--ConvertFiguresPreprocessor.enabled=<Bool>
+    Default: False
+--ConvertFiguresPreprocessor.from_format=<Unicode>
+    Format the converter accepts
+    Default: ''
+--ConvertFiguresPreprocessor.to_format=<Unicode>
+    Format the converter writes
+    Default: ''
+
+NotebookClient(LoggingConfigurable) options
+-------------------------------------------
+--NotebookClient.allow_error_names=<list-item-1>...
+    List of error names which won't stop the execution. Use this if the
+    ``allow_errors`` option it too general and you want to allow only specific
+    kinds of errors.
+    Default: []
+--NotebookClient.allow_errors=<Bool>
+    If ``False`` (default), when a cell raises an error the execution is stopped
+    and a ``CellExecutionError`` is raised, except if the error name is in
+    ``allow_error_names``. If ``True``, execution errors are ignored and the
+    execution is continued until the end of the notebook. Output from exceptions
+    is included in the cell output in both cases.
+    Default: False
+--NotebookClient.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--NotebookClient.error_on_timeout=<key-1>=<value-1>...
+    If a cell execution was interrupted after a timeout, don't wait for the
+    execute_reply from the kernel (e.g. KeyboardInterrupt error). Instead,
+    return an execute_reply with the given error, which should be of the
+    following form::
+        {
+            'ename': str,  # Exception name, as a string
+            'evalue': str,  # Exception value, as a string
+            'traceback': list(str),  # traceback frames, as strings
+        }
+    Default: None
+--NotebookClient.extra_arguments=<list-item-1>...
+    Default: []
+--NotebookClient.force_raise_errors=<Bool>
+    If False (default), errors from executing the notebook can be allowed with a
+    ``raises-exception`` tag on a single cell, or the ``allow_errors`` or
+    ``allow_error_names`` configurable options for all cells. An allowed error
+    will be recorded in notebook output, and execution will continue. If an
+    error occurs when it is not explicitly allowed, a ``CellExecutionError``
+    will be raised. If True, ``CellExecutionError`` will be raised for any error
+    that occurs while executing the notebook. This overrides the
+    ``allow_errors`` and ``allow_error_names`` options and the ``raises-
+    exception`` cell tag.
+    Default: False
+--NotebookClient.interrupt_on_timeout=<Bool>
+    If execution of a cell times out, interrupt the kernel and continue
+    executing other cells rather than throwing an error and stopping.
+    Default: False
+--NotebookClient.iopub_timeout=<Int>
+    The time to wait (in seconds) for IOPub output. This generally doesn't need
+    to be set, but on some slow networks (such as CI systems) the default
+    timeout might not be long enough to get all messages.
+    Default: 4
+--NotebookClient.ipython_hist_file=<Unicode>
+    Path to file to use for SQLite history database for an IPython kernel.
+            The specific value ``:memory:`` (including the colon
+            at both end but not the back ticks), avoids creating a history file. Otherwise, IPython
+            will create a history file for each kernel.
+            When running kernels simultaneously (e.g. via multiprocessing) saving history a single
+            SQLite file can result in database errors, so using ``:memory:`` is recommended in
+            non-interactive contexts.
+    Default: ':memory:'
+--NotebookClient.kernel_manager_class=<Type>
+    The kernel manager class to use.
+    Default: 'jupyter_client.manager.KernelManager'
+--NotebookClient.kernel_name=<Unicode>
+    Name of kernel to use to execute the cells. If not set, use the kernel_spec
+    embedded in the notebook.
+    Default: ''
+--NotebookClient.on_cell_complete=<Callable>
+    A callable which executes after a cell execution is complete. It is called
+    even when a cell results in a failure. Called with kwargs ``cell`` and
+    ``cell_index``.
+    Default: None
+--NotebookClient.on_cell_error=<Callable>
+    A callable which executes when a cell execution results in an error. This is
+    executed even if errors are suppressed with ``cell_allows_errors``. Called
+    with kwargs ``cell`, ``cell_index`` and ``execute_reply``.
+    Default: None
+--NotebookClient.on_cell_execute=<Callable>
+    A callable which executes just before a code cell is executed. Called with
+    kwargs ``cell`` and ``cell_index``.
+    Default: None
+--NotebookClient.on_cell_executed=<Callable>
+    A callable which executes just after a code cell is executed, whether or not
+    it results in an error. Called with kwargs ``cell``, ``cell_index`` and
+    ``execute_reply``.
+    Default: None
+--NotebookClient.on_cell_start=<Callable>
+    A callable which executes before a cell is executed and before non-executing
+    cells are skipped. Called with kwargs ``cell`` and ``cell_index``.
+    Default: None
+--NotebookClient.on_notebook_complete=<Callable>
+    A callable which executes after the kernel is cleaned up. Called with kwargs
+    ``notebook``.
+    Default: None
+--NotebookClient.on_notebook_error=<Callable>
+    A callable which executes when the notebook encounters an error. Called with
+    kwargs ``notebook``.
+    Default: None
+--NotebookClient.on_notebook_start=<Callable>
+    A callable which executes after the kernel manager and kernel client are
+    setup, and cells are about to execute. Called with kwargs ``notebook``.
+    Default: None
+--NotebookClient.raise_on_iopub_timeout=<Bool>
+    If ``False`` (default), then the kernel will continue waiting for iopub
+    messages until it receives a kernel idle message, or until a timeout occurs,
+    at which point the currently executing cell will be skipped. If ``True``,
+    then an error will be raised after the first timeout. This option generally
+    does not need to be used, but may be useful in contexts where there is the
+    possibility of executing notebooks with memory-consuming infinite loops.
+    Default: False
+--NotebookClient.record_timing=<Bool>
+    If ``True`` (default), then the execution timings of each cell will be
+    stored in the metadata of the notebook.
+    Default: True
+--NotebookClient.shell_timeout_interval=<Int>
+    The time to wait (in seconds) for Shell output before retrying. This
+    generally doesn't need to be set, but if one needs to check for dead kernels
+    at a faster rate this can help.
+    Default: 5
+--NotebookClient.shutdown_kernel=<Enum>
+    If ``graceful`` (default), then the kernel is given time to clean up after
+    executing all cells, e.g., to execute its ``atexit`` hooks. If
+    ``immediate``, then the kernel is signaled to immediately terminate.
+    Choices: any of ['graceful', 'immediate']
+    Default: 'graceful'
+--NotebookClient.skip_cells_with_tag=<Unicode>
+    Name of the cell tag to use to denote a cell that should be skipped.
+    Default: 'skip-execution'
+--NotebookClient.startup_timeout=<Int>
+    The time to wait (in seconds) for the kernel to start. If kernel startup
+    takes longer, a RuntimeError is raised.
+    Default: 60
+--NotebookClient.store_widget_state=<Bool>
+    If ``True`` (default), then the state of the Jupyter widgets created at the
+    kernel will be stored in the metadata of the notebook.
+    Default: True
+--NotebookClient.timeout=<Int>
+    The time to wait (in seconds) for output from executions. If a cell
+    execution takes longer, a TimeoutError is raised.
+    ``None`` or ``-1`` will disable the timeout. If ``timeout_func`` is set, it
+    overrides ``timeout``.
+    Default: None
+--NotebookClient.timeout_func=<Any>
+    A callable which, when given the cell source as input, returns the time to
+    wait (in seconds) for output from cell executions. If a cell execution takes
+    longer, a TimeoutError is raised.
+    Returning ``None`` or ``-1`` will disable the timeout for the cell. Not
+    setting ``timeout_func`` will cause the client to default to using the
+    ``timeout`` trait for all cells. The ``timeout_func`` trait overrides
+    ``timeout`` if it is not ``None``.
+    Default: None
+
+ExecutePreprocessor(Preprocessor, NotebookClient) options
+---------------------------------------------------------
+--ExecutePreprocessor.allow_error_names=<list-item-1>...
+    List of error names which won't stop the execution. Use this if the
+    ``allow_errors`` option it too general and you want to allow only specific
+    kinds of errors.
+    Default: []
+--ExecutePreprocessor.allow_errors=<Bool>
+    If ``False`` (default), when a cell raises an error the execution is stopped
+    and a ``CellExecutionError`` is raised, except if the error name is in
+    ``allow_error_names``. If ``True``, execution errors are ignored and the
+    execution is continued until the end of the notebook. Output from exceptions
+    is included in the cell output in both cases.
+    Default: False
+--ExecutePreprocessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--ExecutePreprocessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--ExecutePreprocessor.enabled=<Bool>
+    Default: False
+--ExecutePreprocessor.error_on_timeout=<key-1>=<value-1>...
+    If a cell execution was interrupted after a timeout, don't wait for the
+    execute_reply from the kernel (e.g. KeyboardInterrupt error). Instead,
+    return an execute_reply with the given error, which should be of the
+    following form::
+        {
+            'ename': str,  # Exception name, as a string
+            'evalue': str,  # Exception value, as a string
+            'traceback': list(str),  # traceback frames, as strings
+        }
+    Default: None
+--ExecutePreprocessor.extra_arguments=<list-item-1>...
+    Default: []
+--ExecutePreprocessor.force_raise_errors=<Bool>
+    If False (default), errors from executing the notebook can be allowed with a
+    ``raises-exception`` tag on a single cell, or the ``allow_errors`` or
+    ``allow_error_names`` configurable options for all cells. An allowed error
+    will be recorded in notebook output, and execution will continue. If an
+    error occurs when it is not explicitly allowed, a ``CellExecutionError``
+    will be raised. If True, ``CellExecutionError`` will be raised for any error
+    that occurs while executing the notebook. This overrides the
+    ``allow_errors`` and ``allow_error_names`` options and the ``raises-
+    exception`` cell tag.
+    Default: False
+--ExecutePreprocessor.interrupt_on_timeout=<Bool>
+    If execution of a cell times out, interrupt the kernel and continue
+    executing other cells rather than throwing an error and stopping.
+    Default: False
+--ExecutePreprocessor.iopub_timeout=<Int>
+    The time to wait (in seconds) for IOPub output. This generally doesn't need
+    to be set, but on some slow networks (such as CI systems) the default
+    timeout might not be long enough to get all messages.
+    Default: 4
+--ExecutePreprocessor.ipython_hist_file=<Unicode>
+    Path to file to use for SQLite history database for an IPython kernel.
+            The specific value ``:memory:`` (including the colon
+            at both end but not the back ticks), avoids creating a history file. Otherwise, IPython
+            will create a history file for each kernel.
+            When running kernels simultaneously (e.g. via multiprocessing) saving history a single
+            SQLite file can result in database errors, so using ``:memory:`` is recommended in
+            non-interactive contexts.
+    Default: ':memory:'
+--ExecutePreprocessor.kernel_manager_class=<Type>
+    The kernel manager class to use.
+    Default: 'jupyter_client.manager.KernelManager'
+--ExecutePreprocessor.kernel_name=<Unicode>
+    Name of kernel to use to execute the cells. If not set, use the kernel_spec
+    embedded in the notebook.
+    Default: ''
+--ExecutePreprocessor.on_cell_complete=<Callable>
+    A callable which executes after a cell execution is complete. It is called
+    even when a cell results in a failure. Called with kwargs ``cell`` and
+    ``cell_index``.
+    Default: None
+--ExecutePreprocessor.on_cell_error=<Callable>
+    A callable which executes when a cell execution results in an error. This is
+    executed even if errors are suppressed with ``cell_allows_errors``. Called
+    with kwargs ``cell`, ``cell_index`` and ``execute_reply``.
+    Default: None
+--ExecutePreprocessor.on_cell_execute=<Callable>
+    A callable which executes just before a code cell is executed. Called with
+    kwargs ``cell`` and ``cell_index``.
+    Default: None
+--ExecutePreprocessor.on_cell_executed=<Callable>
+    A callable which executes just after a code cell is executed, whether or not
+    it results in an error. Called with kwargs ``cell``, ``cell_index`` and
+    ``execute_reply``.
+    Default: None
+--ExecutePreprocessor.on_cell_start=<Callable>
+    A callable which executes before a cell is executed and before non-executing
+    cells are skipped. Called with kwargs ``cell`` and ``cell_index``.
+    Default: None
+--ExecutePreprocessor.on_notebook_complete=<Callable>
+    A callable which executes after the kernel is cleaned up. Called with kwargs
+    ``notebook``.
+    Default: None
+--ExecutePreprocessor.on_notebook_error=<Callable>
+    A callable which executes when the notebook encounters an error. Called with
+    kwargs ``notebook``.
+    Default: None
+--ExecutePreprocessor.on_notebook_start=<Callable>
+    A callable which executes after the kernel manager and kernel client are
+    setup, and cells are about to execute. Called with kwargs ``notebook``.
+    Default: None
+--ExecutePreprocessor.raise_on_iopub_timeout=<Bool>
+    If ``False`` (default), then the kernel will continue waiting for iopub
+    messages until it receives a kernel idle message, or until a timeout occurs,
+    at which point the currently executing cell will be skipped. If ``True``,
+    then an error will be raised after the first timeout. This option generally
+    does not need to be used, but may be useful in contexts where there is the
+    possibility of executing notebooks with memory-consuming infinite loops.
+    Default: False
+--ExecutePreprocessor.record_timing=<Bool>
+    If ``True`` (default), then the execution timings of each cell will be
+    stored in the metadata of the notebook.
+    Default: True
+--ExecutePreprocessor.shell_timeout_interval=<Int>
+    The time to wait (in seconds) for Shell output before retrying. This
+    generally doesn't need to be set, but if one needs to check for dead kernels
+    at a faster rate this can help.
+    Default: 5
+--ExecutePreprocessor.shutdown_kernel=<Enum>
+    If ``graceful`` (default), then the kernel is given time to clean up after
+    executing all cells, e.g., to execute its ``atexit`` hooks. If
+    ``immediate``, then the kernel is signaled to immediately terminate.
+    Choices: any of ['graceful', 'immediate']
+    Default: 'graceful'
+--ExecutePreprocessor.skip_cells_with_tag=<Unicode>
+    Name of the cell tag to use to denote a cell that should be skipped.
+    Default: 'skip-execution'
+--ExecutePreprocessor.startup_timeout=<Int>
+    The time to wait (in seconds) for the kernel to start. If kernel startup
+    takes longer, a RuntimeError is raised.
+    Default: 60
+--ExecutePreprocessor.store_widget_state=<Bool>
+    If ``True`` (default), then the state of the Jupyter widgets created at the
+    kernel will be stored in the metadata of the notebook.
+    Default: True
+--ExecutePreprocessor.timeout=<Int>
+    The time to wait (in seconds) for output from executions. If a cell
+    execution takes longer, a TimeoutError is raised.
+    ``None`` or ``-1`` will disable the timeout. If ``timeout_func`` is set, it
+    overrides ``timeout``.
+    Default: None
+--ExecutePreprocessor.timeout_func=<Any>
+    A callable which, when given the cell source as input, returns the time to
+    wait (in seconds) for output from cell executions. If a cell execution takes
+    longer, a TimeoutError is raised.
+    Returning ``None`` or ``-1`` will disable the timeout for the cell. Not
+    setting ``timeout_func`` will cause the client to default to using the
+    ``timeout`` trait for all cells. The ``timeout_func`` trait overrides
+    ``timeout`` if it is not ``None``.
+    Default: None
+
+ExtractAttachmentsPreprocessor(Preprocessor) options
+----------------------------------------------------
+--ExtractAttachmentsPreprocessor.attachments_directory_template=<Unicode>
+    Directory to place attachments if use_separate_dir is True
+    Default: '{notebook_name}_attachments'
+--ExtractAttachmentsPreprocessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--ExtractAttachmentsPreprocessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--ExtractAttachmentsPreprocessor.enabled=<Bool>
+    Default: False
+--ExtractAttachmentsPreprocessor.use_separate_dir=<Bool>
+    Whether to use output_files_dir (which ExtractOutput also uses) or create a
+    separate directory for attachments
+    Default: False
+
+ExtractOutputPreprocessor(Preprocessor) options
+-----------------------------------------------
+--ExtractOutputPreprocessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--ExtractOutputPreprocessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--ExtractOutputPreprocessor.enabled=<Bool>
+    Default: False
+--ExtractOutputPreprocessor.extract_output_types=<set-item-1>...
+    Default: {'application/pdf', 'image/jpeg', 'image/png', 'image/svg+xml'}
+--ExtractOutputPreprocessor.output_filename_template=<Unicode>
+    Default: '{unique_key}_{cell_index}_{index}{extension}'
+
+HighlightMagicsPreprocessor(Preprocessor) options
+-------------------------------------------------
+--HighlightMagicsPreprocessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--HighlightMagicsPreprocessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--HighlightMagicsPreprocessor.enabled=<Bool>
+    Default: False
+--HighlightMagicsPreprocessor.languages=<key-1>=<value-1>...
+    Syntax highlighting for magic's extension languages. Each item associates a
+    language magic extension such as %%R, with a pygments lexer such as r.
+    Default: {}
+
+LatexPreprocessor(Preprocessor) options
+---------------------------------------
+--LatexPreprocessor.author_names=<list-item-1>...
+    Author names to list in the LaTeX document
+    Default: []
+--LatexPreprocessor.date=<Unicode>
+    Date of the LaTeX document
+    Default: None
+--LatexPreprocessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--LatexPreprocessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--LatexPreprocessor.enabled=<Bool>
+    Default: False
+--LatexPreprocessor.style=<Unicode>
+    Name of the pygments style to use
+    Default: 'default'
+--LatexPreprocessor.title=<Unicode>
+    Title of the LaTeX document
+    Default: None
+
+RegexRemovePreprocessor(Preprocessor) options
+---------------------------------------------
+--RegexRemovePreprocessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--RegexRemovePreprocessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--RegexRemovePreprocessor.enabled=<Bool>
+    Default: False
+--RegexRemovePreprocessor.patterns=<list-item-1>...
+    Default: []
+
+SVG2PDFPreprocessor(ConvertFiguresPreprocessor) options
+-------------------------------------------------------
+--SVG2PDFPreprocessor.command=<Union>
+    The command to use for converting SVG to PDF
+    This traitlet is a template, which will be formatted with the keys
+    to_filename and from_filename.
+    The conversion call must read the SVG from {from_filename}, and write a PDF
+    to {to_filename}.
+    It could be a List (recommended) or a String. If string, it will be passed
+    to a shell for execution.
+    Default: traitlets.Undefined
+--SVG2PDFPreprocessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--SVG2PDFPreprocessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--SVG2PDFPreprocessor.enabled=<Bool>
+    Default: False
+--SVG2PDFPreprocessor.from_format=<Unicode>
+    Format the converter accepts
+    Default: ''
+--SVG2PDFPreprocessor.inkscape=<Unicode>
+    The path to Inkscape, if necessary
+    Default: ''
+--SVG2PDFPreprocessor.inkscape_version=<Unicode>
+    The version of inkscape being used.
+            This affects how the conversion command is run.
+    Default: ''
+--SVG2PDFPreprocessor.to_format=<Unicode>
+    Format the converter writes
+    Default: ''
+
+TagRemovePreprocessor(Preprocessor) options
+-------------------------------------------
+--TagRemovePreprocessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--TagRemovePreprocessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--TagRemovePreprocessor.enabled=<Bool>
+    Default: False
+--TagRemovePreprocessor.remove_all_outputs_tags=<set-item-1>...
+    Tags indicating cells for which the outputs are to be removed,matches tags
+    in ``cell.metadata.tags``.
+    Default: set()
+--TagRemovePreprocessor.remove_cell_tags=<set-item-1>...
+    Tags indicating which cells are to be removed,matches tags in
+    ``cell.metadata.tags``.
+    Default: set()
+--TagRemovePreprocessor.remove_input_tags=<set-item-1>...
+    Tags indicating cells for which input is to be removed,matches tags in
+    ``cell.metadata.tags``.
+    Default: set()
+--TagRemovePreprocessor.remove_metadata_fields=<set-item-1>...
+    Default: {'collapsed', 'scrolled'}
+--TagRemovePreprocessor.remove_single_output_tags=<set-item-1>...
+    Tags indicating which individual outputs are to be removed,matches output
+    *i* tags in ``cell.outputs[i].metadata.tags``.
+    Default: set()
+
+WriterBase(NbConvertBase) options
+---------------------------------
+--WriterBase.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--WriterBase.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--WriterBase.files=<list-item-1>...
+    List of the files that the notebook references.  Files will be included with
+    written output.
+    Default: []
+
+DebugWriter(WriterBase) options
+-------------------------------
+--DebugWriter.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--DebugWriter.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--DebugWriter.files=<list-item-1>...
+    List of the files that the notebook references.  Files will be included with
+    written output.
+    Default: []
+
+FilesWriter(WriterBase) options
+-------------------------------
+--FilesWriter.build_directory=<Unicode>
+    Directory to write output(s) to. Defaults
+                                  to output to the directory of each notebook. To recover
+                                  previous default behaviour (outputting to the current
+                                  working directory) use . as the flag value.
+    Default: ''
+--FilesWriter.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--FilesWriter.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--FilesWriter.files=<list-item-1>...
+    List of the files that the notebook references.  Files will be included with
+    written output.
+    Default: []
+--FilesWriter.relpath=<Unicode>
+    When copying files that the notebook depends on, copy them in
+            relation to this path, such that the destination filename will be
+            os.path.relpath(filename, relpath). If FilesWriter is operating on a
+            notebook that already exists elsewhere on disk, then the default will be
+            the directory containing that notebook.
+    Default: ''
+
+StdoutWriter(WriterBase) options
+--------------------------------
+--StdoutWriter.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--StdoutWriter.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--StdoutWriter.files=<list-item-1>...
+    List of the files that the notebook references.  Files will be included with
+    written output.
+    Default: []
+
+PostProcessorBase(NbConvertBase) options
+----------------------------------------
+--PostProcessorBase.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--PostProcessorBase.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+
+ServePostProcessor(PostProcessorBase) options
+---------------------------------------------
+--ServePostProcessor.browser=<Unicode>
+    Specify what browser should be used to open slides. See
+                          https://docs.python.org/3/library/webbrowser.html#webbrowser.register
+                          to see how keys are mapped to browser executables. If
+                          not specified, the default browser will be determined
+                          by the `webbrowser`
+                          standard library module, which allows setting of the BROWSER
+                          environment variable to override it.
+    Default: ''
+--ServePostProcessor.default_language=<Unicode>
+    Deprecated default highlight language as of 5.0, please use language_info
+    metadata instead
+    Default: 'ipython'
+--ServePostProcessor.display_data_priority=<list-item-1>...
+    An ordered list of preferred output type, the first encountered will usually
+    be used when converting discarding the others.
+    Default: ['text/html', 'application/pdf', 'text/latex', 'image/svg+xml...
+--ServePostProcessor.ip=<Unicode>
+    The IP address to listen on.
+    Default: '127.0.0.1'
+--ServePostProcessor.open_in_browser=<Bool>
+    Should the browser be opened automatically?
+    Default: True
+--ServePostProcessor.port=<Int>
+    port for the server to listen on.
+    Default: 8000
+--ServePostProcessor.reveal_cdn=<Unicode>
+    URL for reveal.js CDN.
+    Default: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0'
+--ServePostProcessor.reveal_prefix=<Unicode>
+    URL prefix for reveal.js
+    Default: 'reveal.js'
+
+Examples
+--------
+
+    The simplest way to use nbconvert is
+
+            > jupyter nbconvert mynotebook.ipynb --to html
+
+            Options include ['asciidoc', 'custom', 'html', 'latex', 'markdown', 'notebook', 'pdf', 'python', 'qtpdf', 'qtpng', 'rst', 'script', 'slides', 'webpdf'].
+
+            > jupyter nbconvert --to latex mynotebook.ipynb
+
+            Both HTML and LaTeX support multiple output templates. LaTeX includes
+            'base', 'article' and 'report'.  HTML includes 'basic', 'lab' and
+            'classic'. You can specify the flavor of the format used.
+
+            > jupyter nbconvert --to html --template lab mynotebook.ipynb
+
+            You can also pipe the output to stdout, rather than a file
+
+            > jupyter nbconvert mynotebook.ipynb --stdout
+
+            PDF is generated via latex
+
+            > jupyter nbconvert mynotebook.ipynb --to pdf
+
+            You can get (and serve) a Reveal.js-powered slideshow
+
+            > jupyter nbconvert myslides.ipynb --to slides --post serve
+
+            Multiple notebooks can be given at the command line in a couple of
+            different ways:
+
+            > jupyter nbconvert notebook*.ipynb
+            > jupyter nbconvert notebook1.ipynb notebook2.ipynb
+
+            or you can specify the notebooks list in a config file, containing::
+
+                c.NbConvertApp.notebooks = ["my_notebook.ipynb"]
+
+            > jupyter nbconvert --config mycfg.py
+

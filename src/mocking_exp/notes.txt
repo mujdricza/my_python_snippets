@@ -1,0 +1,3 @@
+https://stackoverflow.com/questions/48812097/mocking-an-imported-function-with-pytest
+
+https://medium.com/@george.shuklin/mocking-complicated-init-in-python-6ef9850dd202

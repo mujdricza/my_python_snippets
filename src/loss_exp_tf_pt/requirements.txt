@@ -1,0 +1,6 @@
+matplotlib
+tensorflow
+torch
+scikit-learn
+## including
+# numpy

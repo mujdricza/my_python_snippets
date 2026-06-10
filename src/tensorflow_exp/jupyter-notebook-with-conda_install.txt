@@ -1,0 +1,17 @@
+https://www.youtube.com/watch?v=K7NLegbvbNE
+
+
+conda activate venv_ml-exp
+
+conda install -c anaconda ipykernel
+
+python -m ipykernel install --user --name=ml-exp
+-> Installed kernelspec ml-exp in /home/emm/.local/share/jupyter/kernels/ml-exp
+
+jupyter notebook
+
+open browser like:
+ http://localhost:8888/tree?token=4f218a9da50f224bd35776d83c8cc327ab5c896bc4d0b5f3
+
+Select Kernel: "New" / "ml-exp" 
+

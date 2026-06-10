@@ -1,0 +1,6 @@
+Example run:
+
+(venv_misc-p313) emm@axx-PF3L1VPD:/mnt/c/home/Eva/github/mujdricza/my_python_snippets (main)$ jupyter nbconvert --to html --execute src/notebooks_exp/notebook_convertion/notebook_v1.ipynb --output-dir src/notebooks_exp/notebook_convertion/converted/ --output notebook_v1-converted --allow-errors
+[NbConvertApp] Making directory src/notebooks_exp/notebook_convertion/converted/
+[NbConvertApp] Converting notebook src/notebooks_exp/notebook_convertion/notebook_v1.ipynb to html
+[NbConvertApp] Writing 272483 bytes to src/notebooks_exp/notebook_convertion/converted/notebook_v1-converted.html

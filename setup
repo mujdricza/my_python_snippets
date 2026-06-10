@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Usage: source setup
+# -> augments PYTHONPATH with the root path to the current repository
+
+SCRIPT_PATH="$( realpath "${BASH_SOURCE[0]}"; )";    # Resolve the full path of this script
+REPO_ROOT="$( dirname "${SCRIPT_PATH}"; )";   # get the directory of the path
+
+# NOTE that the "-e" and "--" marks are not working on a MacOS, thus the following command variants are not optimal:
+# SCRIPT_PATH="$( realpath -e -- "${BASH_SOURCE[0]}"; )";    # Resolve the full path of this script
+# REPO_ROOT="$( dirname -- "${SCRIPT_PATH}"; )";   # get the directory of the path
+
+# if PYTHONPATH already containing the REPO_ROOT, remove it first
+if [ -n "$PYTHONPATH" ] && [[ $PYTHONPATH == *"${REPO_ROOT}"* ]]; then
+  PYTHONPATH=${PYTHONPATH//":${REPO_ROOT}:"/:}  # delete all instances in the middle
+  PYTHONPATH=${PYTHONPATH/%":${REPO_ROOT}"/}  # delete any instance at the end
+  PYTHONPATH=${PYTHONPATH/#"${REPO_ROOT}:"/}  # delete any instance at the beginning
+  if [[ $PYTHONPATH == "${REPO_ROOT}" ]]; then  # if PYTHONPATH still set to REPO_ROOT, delete it
+    PYTHONPATH=
+  fi
+fi
+
+# add REPO_ROOT to the current PYTHONPATH
+export PYTHONPATH=${REPO_ROOT}${PYTHONPATH:+:${PYTHONPATH}}
+
+# feedback on console
+echo "Added '${REPO_ROOT}' to PYTHONPATH"
+echo "Current PYTHONPATH=${PYTHONPATH}"
