@@ -22,8 +22,9 @@
 # Special subfolders or files
 # folder names end with a "/"
 #experiments/
-tmp/
-__*/
+**/tmp/
+**/___*/
+**/___*
 *_old
 # might be too big:
 **/checkpoint*/
