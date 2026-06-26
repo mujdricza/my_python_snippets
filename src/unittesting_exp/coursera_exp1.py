@@ -12,6 +12,9 @@
     Fixture - Shared test data or state managed by the testing framework.
 """
 
+# Test function using pytest fixture for temp data
+import pytest
+
 class Calculator:
 
     def add(self, value1, value2):
@@ -37,10 +40,6 @@ class TestCalculator:
     def test_multiply(self):
         calculator = Calculator()
         assert calculator.multiply(3, 5) == 15
-
-
-# Test function using pytest fixture for temp data
-import pytest
 
 
 @pytest.fixture

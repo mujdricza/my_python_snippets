@@ -1,0 +1,9 @@
+Video tutorial: https://www.youtube.com/watch?v=tpMOF1cT4Fc
+Tutorial code: https://github.com/simranjeet97/LLM_Distillation
+
+Underlying paper:
+
+Hsieh Et al. 2023: Distilling Step-by-Step! Outperforming Larger Language Models with Less Training Data and Smaller Model Sizes
+paper: https://aclanthology.org/2023.findings-acl.507.pdf
+video: https://aclanthology.org/2023.findings-acl.507.mp4
+

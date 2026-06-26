@@ -25,6 +25,7 @@
 tmp/
 __*/
 *_old
+checkpoint*/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
